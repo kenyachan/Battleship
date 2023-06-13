@@ -1,7 +1,7 @@
 const TYPE = ['Carrier', 'Battleship', 'Submarine', 'Cruiser', 'Destroyer']; 
 const LENGTHS = [5, 4, 3, 3, 2];
 
-function ship(type) {
+function Ship(type) {
 	let _type = type;
 	let _hits = 0;
 	let _length = LENGTHS[TYPE.indexOf(type)];
@@ -30,4 +30,4 @@ function ship(type) {
 	}
 }
 
-module.exports = ship;
+module.exports = Ship;
