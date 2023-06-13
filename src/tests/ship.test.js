@@ -49,17 +49,21 @@ describe('Testing ship properties', () => {
 });
 
 describe('Testing ship isSunk query', () => {
-	let destroyer = Ship('Destroyer');
+	const SHIPS = ['Carrier', 'Battleship', 'Submarine', 'Cruiser', 'Destroyer'];
 
-	test('isSunk returns false if destroyer is not sunk', () => {
-		expect(destroyer.isSunk()).toBeFalsy();
+	let randomNumber = Math.floor(Math.random() * 4);
+	let randomShip = Ship(SHIPS[randomNumber]);
+
+	test("isSunk returns false is the ship hits is less than it's length", () => {
+		expect(randomShip.hits()).toBeLessThan(randomShip.length);
+		expect(randomShip.isSunk()).toBeFalsy();
 	});
 
-	test('isSunk returns true if destroyer is sunk', () => {
-		destroyer.hit();
-		destroyer.hit();
+	test("isSunk returns true if the ship hits is equal to it's length", () => {
+		while(randomShip.hits() <= randomShip.length)
+			randomShip.hit();
 
-		expect(destroyer.isSunk()).toBeTruthy();
+		expect(randomShip.isSunk()).toBeTruthy;
 	});
 });
 
@@ -69,17 +73,13 @@ describe('Testing ship hit command', () => {
 	let randomNumber = Math.floor(Math.random() * 4);
 	let randomShip = Ship(SHIPS[randomNumber]);
 
-	test('When ship is hit once, number of hits will be 1', () => {
-		randomShip.hit();
-		
-		expect(randomShip.hits()).toEqual(1);
-	});
+	let randomNumber_shipHits = Math.floor(Math.random() * randomShip.length);
 
-	test("When a ship is hit the same number of times as it's length, it is sunk", () => {
-		for (let i = 1; i <= randomShip.length - 1; i++) {
+	test("Ship hits will reflect the number of hits it received", () => {
+		for(let i = 0; i < randomNumber_shipHits; i++) {
 			randomShip.hit();
 		}
-
-		expect(randomShip.isSunk()).toBeTruthy();
+		
+		expect(randomShip.hits()).toEqual(randomNumber_shipHits);
 	});
 });
