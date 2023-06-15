@@ -1,32 +1,35 @@
 const TYPE = ['Carrier', 'Battleship', 'Submarine', 'Cruiser', 'Destroyer']; 
 const LENGTHS = [5, 4, 3, 3, 2];
 
-function Ship(type) {
-	let _type = type;
-	let _hits = 0;
-	let _length = LENGTHS[TYPE.indexOf(type)];
+class Ship {
+	#length;
+	#type;
+	#hits;
 
-	return {
-		get length() {
-			return _length;
-		},
+	constructor(type) {
+		this.#type = type;
+		this.#length = LENGTHS[TYPE.indexOf(type)];
+		this.#hits = 0;
+	}
 
-		get type() {
-			return _type;
-		},
+	get type() {
+		return this.#type;
+	}
 
-		hits() {
-			return _hits;
-		},
+	get length() {
+		return this.#length;
+	}
 
-		isSunk() {
-			return _hits < _length ? false : true;
-		},
+	hits() {
+		return this.#hits;
+	}
 
-		hit() {
-			return _hits <= _length ? _hits += 1 : _hits;
-		}
+	isSunk() {
+		return this.#hits < this.#length ? false : true;
+	}
 
+	hit() {
+		return this.#hits <= this.#length ? this.#hits += 1 : this.#hits;
 	}
 }
 

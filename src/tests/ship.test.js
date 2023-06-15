@@ -1,11 +1,11 @@
 const Ship = require('../ship');
 
 describe('Testing ship properties', () => {
-	let destroyer = Ship('Destroyer');
-	let cruiser = Ship('Cruiser');
-	let sub = Ship('Submarine');
-	let battleship = Ship('Battleship');
-	let carrier = Ship('Carrier');
+	let destroyer = new Ship('Destroyer');
+	let cruiser = new Ship('Cruiser');
+	let sub = new Ship('Submarine');
+	let battleship = new Ship('Battleship');
+	let carrier = new Ship('Carrier');
 
 	test('Ship is a Destroyer', () => {
 		expect(destroyer.type).toEqual('Destroyer');
@@ -52,7 +52,7 @@ describe('Testing ship isSunk query', () => {
 	const SHIPS = ['Carrier', 'Battleship', 'Submarine', 'Cruiser', 'Destroyer'];
 
 	let randomNumber = Math.floor(Math.random() * 4);
-	let randomShip = Ship(SHIPS[randomNumber]);
+	let randomShip = new Ship(SHIPS[randomNumber]);
 
 	test("isSunk returns false is the ship hits is less than it's length", () => {
 		expect(randomShip.hits()).toBeLessThan(randomShip.length);
@@ -71,7 +71,7 @@ describe('Testing ship hit command', () => {
 	const SHIPS = ['Carrier', 'Battleship', 'Submarine', 'Cruiser', 'Destroyer'];
 
 	let randomNumber = Math.floor(Math.random() * 4);
-	let randomShip = Ship(SHIPS[randomNumber]);
+	let randomShip = new Ship(SHIPS[randomNumber]);
 
 	let randomNumber_shipHits = Math.floor(Math.random() * randomShip.length);
 
@@ -83,3 +83,4 @@ describe('Testing ship hit command', () => {
 		expect(randomShip.hits()).toEqual(randomNumber_shipHits);
 	});
 });
+
