@@ -51,8 +51,14 @@ describe('Testing ship properties', () => {
 describe('Testing ship isSunk query', () => {
 	const SHIPS = ['Carrier', 'Battleship', 'Submarine', 'Cruiser', 'Destroyer'];
 
-	let randomNumber = Math.floor(Math.random() * 4);
-	let randomShip = new Ship(SHIPS[randomNumber]);
+	let randomNumber;
+	let randomShip;
+
+	beforeEach(() => {
+		randomNumber = Math.floor(Math.random() * 4);
+		randomShip = new Ship(SHIPS[randomNumber]);
+
+	});
 
 	test("isSunk returns false is the ship hits is less than it's length", () => {
 		expect(randomShip.hits()).toBeLessThan(randomShip.length);
