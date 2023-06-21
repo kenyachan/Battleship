@@ -11,12 +11,12 @@ beforeEach(() => {
 	coordinates = new Coordinates(randomX, randomY);
 });
 
-describe('Check coordinates created properly', () => {
+describe('Check coordinates are created properly', () => {
 	test('x coordinate', () => {
 		expect(coordinates.x).toEqual(randomX);
 	});
 	
-	test('y coordiate', () => {
+	test('y coordinate', () => {
 		expect(coordinates.y).toEqual(randomY);
 	});
 });
@@ -36,7 +36,7 @@ describe('Check equality', () => {
 });
 
 describe('Test toString', () => {
-	test(`Returns the coordintes (${randomX},${randomY}) as string`, () => {
+	test('Returns the coordintes as string', () => {
 		expect(coordinates.toString()).toEqual(`(${randomX},${randomY})`);
 	});
 });
