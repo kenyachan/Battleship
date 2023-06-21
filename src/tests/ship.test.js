@@ -1,5 +1,8 @@
 const Ship = require('../ship');
 
+const Coordinates = require('../coordinates');
+jest.mock('../coordinates');
+
 describe('Testing ship properties', () => {
 	let destroyer = new Ship('Destroyer');
 	let cruiser = new Ship('Cruiser');
@@ -48,18 +51,19 @@ describe('Testing ship properties', () => {
 	});
 });
 
+const SHIPS = ['Carrier', 'Battleship', 'Submarine', 'Cruiser', 'Destroyer'];
+
+let randomNumber;
+let randomShip;
+let direction
+
+beforeEach(() => {
+	randomNumber = Math.floor(Math.random() * 4);
+	direction = randomNumber % 2 === 0 ? 'horizontal' : 'vertical';
+	randomShip = new Ship(SHIPS[randomNumber], new Coordinates(1, 1), direction, Coordinates);
+});
+
 describe('Testing ship isSunk query', () => {
-	const SHIPS = ['Carrier', 'Battleship', 'Submarine', 'Cruiser', 'Destroyer'];
-
-	let randomNumber;
-	let randomShip;
-
-	beforeEach(() => {
-		randomNumber = Math.floor(Math.random() * 4);
-		randomShip = new Ship(SHIPS[randomNumber]);
-
-	});
-
 	test("isSunk returns false is the ship hits is less than it's length", () => {
 		expect(randomShip.hits()).toBeLessThan(randomShip.length);
 		expect(randomShip.isSunk()).toBeFalsy();
@@ -74,19 +78,22 @@ describe('Testing ship isSunk query', () => {
 });
 
 describe('Testing ship hit command', () => {
-	const SHIPS = ['Carrier', 'Battleship', 'Submarine', 'Cruiser', 'Destroyer'];
-
-	let randomNumber = Math.floor(Math.random() * 4);
-	let randomShip = new Ship(SHIPS[randomNumber]);
-
-	let randomNumber_shipHits = Math.floor(Math.random() * randomShip.length);
-
 	test("Ship hits will reflect the number of hits it received", () => {
-		for(let i = 0; i < randomNumber_shipHits; i++) {
+		let randomNumber_shipHits = Math.floor(Math.random() * randomShip.length);
+
+		for(let i = 0; i < randomNumber_shipHits; i++)
 			randomShip.hit();
-		}
 		
 		expect(randomShip.hits()).toEqual(randomNumber_shipHits);
 	});
 });
 
+describe('Testing Coordinates', () => {
+	test('Ship coordinates are an array of coordinates', () => {
+		randomShip.coordinates().forEach(coordinates => {
+			expect(coordinates instanceof Coordinates).toEqual(true);
+		});
+
+		expect(randomShip.coordinates().length).toEqual(randomShip.length);
+	});
+});
