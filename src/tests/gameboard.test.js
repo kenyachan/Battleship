@@ -1,4 +1,6 @@
 const Gameboard = require('../gameboard');
+const Coordinates = require('../coordinates');
+//jest.mock('../coordinates');
 
 /*
  * Game board should know where all the ships are
@@ -24,31 +26,46 @@ const Gameboard = require('../gameboard');
  *
  */
 
+let board;
+
+beforeEach(() => {
+	board = new Gameboard(Coordinates);
+});
+
 describe('Game board initialisation', () => {
-	let board;
-
-	beforeEach(() => {
-		board = new Gameboard();
-	});
-
-	test('Create a new game board', () => {
+	test('Create a new game board with a grid of size 10x10', () => {
 		expect(board instanceof Gameboard).toEqual(true);
+		expect(board.getGrid().length).toEqual(100);
 	});
 });
 
-describe('Check game board size', () => {
-	let board;
-
-	beforeEach(() => {
-		board = new Gameboard();
+describe('Check game board grid', () => {
+	test('Gameboard grid should be size 10x10', () => {
+		expect(board.getGrid().length).toEqual(100);
 	});
 
-	test('Height should be 10', () => {
-		expect(board.height).toEqual(10);
+	test('Grid coordinates x has a minimum value of 0', () => {
+		const coordinateMinValue = (coordinate) => coordinate.x >= 0;
+
+		expect(board.getGrid().every(coordinateMinValue)).toEqual(true);
 	});
 
-	test('Width should be 10', () => {
-		expect(board.width).toEqual(10);
+	test('Grid coordinates y has a minimum value of 0', () => {
+		const coordinateMinValue = (coordinate) => coordinate.y >= 0;
+
+		expect(board.getGrid().every(coordinateMinValue)).toEqual(true);
+	});
+
+	test('Grid coordinates x has a maximum value of 9', () => {
+		const coordinateMaxValue = (coordinate) => coordinate.x <= 9;
+
+		expect(board.getGrid().every(coordinateMaxValue)).toEqual(true);
+	});
+
+	test('Grid coordinates y has a maximum value of 9', () => {
+		const coordinateMaxValue = (coordinate) => coordinate.y <= 9;
+
+		expect(board.getGrid().every(coordinateMaxValue)).toEqual(true);
 	});
 });
 
