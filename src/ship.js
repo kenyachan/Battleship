@@ -4,28 +4,31 @@ const LENGTHS = [5, 4, 3, 3, 2];
 class Ship {
 	#length;
 	#type;
-	#hits;
+	#hits = 0;
 	#coordinates = [];
+	#Coordinates;
 
-	constructor(type, coordinates, direction, Coordinates) {
-		this.#type = type;
-		this.#length = LENGTHS[TYPE.indexOf(type)];
-		this.#hits = 0;
-	
-		if (Coordinates) {
-			this.#initCoordinates(coordinates, direction, Coordinates); 
-		}
+	constructor(Coordinates) {
+		this.#Coordinates = Coordinates;
 	}
 
-	#initCoordinates(coordinates, direction, Coordinates) {
+	set type(type) {
+		if (TYPE.includes(type) === false)
+			throw new Error(`${type} is not a valid type of ship`);
+
+		this.#type = type;
+		this.#length = LENGTHS[TYPE.indexOf(type)];
+	}
+
+	setCoordinates(coordinates, direction) {
 		for (let i = 0; i < this.#length; i++) {
 			let nextCoordinates;
 			
 			if (direction === 'horizontal')
-				nextCoordinates = new Coordinates(coordinates.x + i, coordinates.y);
+				nextCoordinates = new this.#Coordinates(coordinates.x + i, coordinates.y);
 
 			if (direction === 'vertical')
-				nextCoordinates = new Coordinates(coordinates.x, coordinates.y + 1);
+				nextCoordinates = new this.#Coordinates(coordinates.x, coordinates.y + 1);
 
 			this.#coordinates.push(nextCoordinates);
 		}
@@ -39,7 +42,7 @@ class Ship {
 		return this.#length;
 	}
 
-	hits() {
+	getHits() {
 		return this.#hits;
 	}
 
@@ -48,10 +51,10 @@ class Ship {
 	}
 
 	hit() {
-		return this.#hits <= this.#length ? this.#hits += 1 : this.#hits;
+		this.#hits <= this.#length ? this.#hits += 1 : this.#hits;
 	}
 
-	coordinates() {
+	getCoordinates() {
 		return this.#coordinates;
 	}
 }
