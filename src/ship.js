@@ -5,7 +5,7 @@ class Ship {
 	#length;
 	#type;
 	#hits = 0;
-	#coordinates = [];
+	#coordinates;
 	#Coordinates;
 
 	constructor(Coordinates) {
@@ -20,18 +20,8 @@ class Ship {
 		this.#length = LENGTHS[TYPE.indexOf(type)];
 	}
 
-	setCoordinates(coordinates, direction) {
-		for (let i = 0; i < this.#length; i++) {
-			let nextCoordinates;
-			
-			if (direction === 'horizontal')
-				nextCoordinates = new this.#Coordinates(coordinates.x + i, coordinates.y);
-
-			if (direction === 'vertical')
-				nextCoordinates = new this.#Coordinates(coordinates.x, coordinates.y + 1);
-
-			this.#coordinates.push(nextCoordinates);
-		}
+	setCoordinates(coordinates) {
+		this.#coordinates = coordinates;	
 	}
 
 	get type() {

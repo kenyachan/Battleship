@@ -18,9 +18,30 @@ function createRandomShip() {
 
 	let ship = new Ship(Coordinates);
 	ship.type = SHIPS[randomNumber];
-	ship.setCoordinates(new Coordinates(1, 1), direction);
+
+	let coordinates = extendCoordinates(new Coordinates(1, 1), ship.length, direction);
+
+	ship.setCoordinates(coordinates);
 
 	return ship;
+}
+
+function extendCoordinates(initialCoordinates, length, direction) {
+	let extendedCoordinates = [];
+
+	for (let i = 0; i < length; i++) {
+		let coordinates;
+
+		if (direction === 'horizontal')
+			coordinates = new Coordinates(initialCoordinates.x + i, initialCoordinates.y);
+
+		if (direction === 'vertical')
+			coordinates = new Coordinates(initialCoordinates.x, initialCoordinates.y + i);
+
+		extendedCoordinates.push(coordinates);
+	}
+
+	return extendedCoordinates;
 }
 
 describe('Check ship lengths', () => {	
