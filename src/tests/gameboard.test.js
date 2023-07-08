@@ -83,10 +83,14 @@ describe('Ship placement', () => {
 	});
 });
 
-describe('Gameboard receive attack', () => {
-	test.todo('Gameboard will have a list of previous attacks');
+describe('Gameboard attack', () => {
+	test('Gameboard cannot receive attack where previous attack has occured', () => {
+		let attackCoordinates = new Coordinates(1, 1);
 
-	test.todo('Gameboard cannot receive attack where previous attack has occured');
+		expect(() => board.receiveAttack(attackCoordinates)).not.toThrow();
+		expect(board.getAttacksReceived().length).toBeGreaterThan(0);
+		expect(() => board.receiveAttack(attackCoordinates)).toThrow();
+	});
 
 	test.todo('Gameboard cannot receive attack out of board limits');
 
