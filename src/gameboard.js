@@ -1,6 +1,8 @@
 class Gameboard {
 	#boardSize = 10;
 	#ships = [];
+	#attacksHistory = [];
+	#missedAttacks = [];
 	#Coordinates;
 
 	constructor(Coordinates) {
@@ -47,12 +49,7 @@ class Gameboard {
 	}
 
 	#overlap(coordinates, ship) {
-		let shipCoordinates = ship.getCoordinates();
-
-		if (shipCoordinates.filter(coordinate => coordinates.equals(coordinate)).length > 0)
-			return true;
-
-		return false;
+		return ship.getCoordinates().find(shipCoordinates => shipCoordinates.equals(coordinates));
 	}
 
 	#extendCoordinates(initialCoordinates, length, direction) {
@@ -71,6 +68,50 @@ class Gameboard {
 		}
 
 		return extendedCoordinates;
+	}
+
+	getAttacksHistory() {
+		return this.#attacksHistory;
+	}
+
+	getMissedAttacks() {
+		return this.#missedAttacks;
+	}
+
+	receiveAttack(attackCoordinates) {
+		if (this.#validateAttack(attackCoordinates, this.#attacksHistory) === false)
+			return null;
+
+		this.#attacksHistory.push(attackCoordinates);
+
+		let ship = this.#ships.find(
+			ship => ship.getCoordinates().find(
+				coordinates => coordinates.equals(attackCoordinates)
+			)
+		);
+
+		if (ship) {
+			ship.hit(attackCoordinates);
+			return true;
+		}
+
+		this.#missedAttacks.push(attackCoordinates);
+
+		return false;
+	}
+
+	#validateAttack(attackCoordinates, attacksHistory) {
+		if (attacksHistory.find(coordinates => attackCoordinates.equals(coordinates)))
+			return false;
+
+		if (this.#withinBoardLimits(attackCoordinates) === false)
+			return false;
+
+		return true;
+	}
+
+	allShipsSunk() {
+		return this.#ships.every(ship => ship.isSunk() === true);
 	}
 }
 
