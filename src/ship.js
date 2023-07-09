@@ -4,7 +4,7 @@ const LENGTHS = [5, 4, 3, 3, 2];
 class Ship {
 	#length;
 	#type;
-	#hits = 0;
+	#hits = [];
 	#coordinates;
 	#Coordinates;
 
@@ -40,8 +40,14 @@ class Ship {
 		return this.#hits < this.#length ? false : true;
 	}
 
-	hit() {
-		this.#hits <= this.#length ? this.#hits += 1 : this.#hits;
+	hit(attackCoordinates) {
+		if (attackCoordinates instanceof this.#Coordinates === false)
+			throw new Error("Argument must be Coordinates");
+
+		if (this.#hits.filter(coordinates => attackCoordinates.equals(coordinates)).length > 0)
+			throw new Error("Ship cannot be hit in the same coordinates more than once");
+
+		this.#hits.push(attackCoordinates);
 	}
 
 	getCoordinates() {
