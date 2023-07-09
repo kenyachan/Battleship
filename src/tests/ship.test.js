@@ -1,6 +1,6 @@
 const Ship = require('../ship');
 const Coordinates = require('../coordinates');
-jest.mock('../coordinates');
+//jest.mock('../coordinates');
 
 let ship;
 let randomShip;
@@ -77,20 +77,25 @@ describe('Check ship lengths', () => {
 });
 
 describe('Testing ship hit command', () => {
-	test("The ship will keep track of the number of times it has been hit", () => {
-		let numberOfHits = Math.ceil(Math.random() * (randomShip.length - 1));
+	test("The ship will keep track of where it has been hit", () => {
+		let attackCoordinates = new Coordinates(1, 1);
 
-		while(randomShip.getHits() < numberOfHits)
-			randomShip.hit();
+		randomShip.hit(attackCoordinates);
+		expect(randomShip.getHits()[0].equals(attackCoordinates)).toEqual(true);
+	});
 
-		expect(randomShip.getHits()).toEqual(numberOfHits);
+	test("The ship cannot be hit in the same place twice", () => {
+		let attackCoordinates = new Coordinates(1, 1);
+
+		randomShip.hit(attackCoordinates);
+		expect(() => randomShip.hit(attackCoordinates)).toThrow();
 	});
 
 	test("A ship hit the same number of times as it's length will be sunk", () => {
 		for (let i = 0; i < randomShip.length; i++)
-			randomShip.hit();
+			randomShip.hit(new Coordinates(i, 1));
 
-		expect(randomShip.getHits()).toEqual(randomShip.length);
+		expect(randomShip.getHits().length).toEqual(randomShip.length);
 		expect(randomShip.isSunk()).toEqual(true);
 	});
 });
