@@ -1,117 +1,78 @@
 class Gameboard {
-	#boardSize = 10;
-	#ships = [];
-	#attacksHistory = [];
-	#missedAttacks = [];
-	#Coordinates;
+	boardMaxWidth = 9;
+	boardMaxHeight = 9;
 
+	#squares = [];
+	#ships = [];
+	
 	constructor(Coordinates) {
-		this.#Coordinates = Coordinates;
+		for (let y = 0; y <= this.boardMaxWidth; y++) {
+			for (let x = 0; x <= this.boardMaxHeight; x++) {
+				let square = {
+					coordinates : new Coordinates(x, y),
+					ship : undefined,
+					shotReceived : false
+				}
+
+				this.#squares.push(square);
+			}
+		}
 	}
 
-	placeShip(ship, coordinates, direction) {
-		if (this.#validateCoordinates(coordinates) === false)
-			throw new Error('Invalid coordinates. Coordinates provided are out of range.');
-		
-		let extendedCoordinates = this.#extendCoordinates(coordinates, ship.length, direction);
+	placeShip(ship, position) {
+		if (position.some(coordinates => this.#outOfBounds(coordinates)))
+			return false;
 
-		if (extendedCoordinates.every(coordinate => this.#validateCoordinates(coordinate)) === false)
-			throw new Error('Invalid coordinates. Coordinates cannot extend beyond the board.');
+		if (position.some(coordinates => this.#overlap(coordinates,
+			this.#squares))) return false;
 
-		ship.setCoordinates(extendedCoordinates);
+		position.forEach(coordinate => this.#squares.find(square =>
+			square.coordinates.equals(coordinate)).ship = ship);
 
 		this.#ships.push(ship);
+
+		return true; }
+
+	#overlap(coordinates, boardSquares) { return boardSquares.find(square =>
+		square.coordinates.equals(coordinates) && square.ship) }
+
+	#outOfBounds(coordinates) {
+		return (
+			coordinates.x < 0 || coordinates.x > this.boardMaxWidth ||
+			coordinates.y < 0 || coordinates.y > this.boardMaxHeight
+		) 
+			? true : false;
 	}
 
 	getShips() {
 		return this.#ships;
 	}
 
-	#validateCoordinates(coordinates) {
-		if (!this.#withinBoardLimits(coordinates))
-			return false;
-
-		if (!this.#ships.every(ship => this.#overlap(coordinates, ship) === false))
-			return false;
-
-		return true;
-	}
-
-	#withinBoardLimits(coordinates) {
-		if (coordinates.x < 0 ||
-			coordinates.y < 0 ||
-			coordinates.x > this.#boardSize - 1 ||
-			coordinates.y > this.#boardSize - 1
-		)
-			return false;
-		
-		return true;
-	}
-
-	#overlap(coordinates, ship) {
-		return ship.getCoordinates().find(shipCoordinates => shipCoordinates.equals(coordinates));
-	}
-
-	#extendCoordinates(initialCoordinates, length, direction) {
-		let extendedCoordinates = [];
-
-		for (let i = 0; i < length; i++) {
-			let coordinates;
-
-			if (direction === 'horizontal')
-				coordinates = new this.#Coordinates(initialCoordinates.x + i, initialCoordinates.y);
-
-			if (direction === 'vertical')
-				coordinates = new this.#Coordinates(initialCoordinates.x, initialCoordinates.y + i);
-
-			extendedCoordinates.push(coordinates);
-		}
-
-		return extendedCoordinates;
-	}
-
-	getAttacksHistory() {
-		return this.#attacksHistory;
-	}
-
-	getMissedAttacks() {
-		return this.#missedAttacks;
+	getSquares() {
+		return this.#squares;
 	}
 
 	receiveAttack(attackCoordinates) {
-		if (this.#validateAttack(attackCoordinates, this.#attacksHistory) === false)
-			return null;
+		if (this.#outOfBounds(attackCoordinates))
+			return false;
 
-		this.#attacksHistory.push(attackCoordinates);
+		let targetSquare = this.#squares.find(square => square.coordinates.equals(attackCoordinates));
+		
+		if (targetSquare.shotReceived)
+			return false;
+		
+		targetSquare.shotReceived = true;
 
-		let ship = this.#ships.find(
-			ship => ship.getCoordinates().find(
-				coordinates => coordinates.equals(attackCoordinates)
-			)
-		);
-
-		if (ship) {
-			ship.hit(attackCoordinates);
+		if (targetSquare.ship) {
+			targetSquare.ship.hit();
 			return true;
 		}
-
-		this.#missedAttacks.push(attackCoordinates);
 
 		return false;
 	}
 
-	#validateAttack(attackCoordinates, attacksHistory) {
-		if (attacksHistory.find(coordinates => attackCoordinates.equals(coordinates)))
-			return false;
-
-		if (this.#withinBoardLimits(attackCoordinates) === false)
-			return false;
-
-		return true;
-	}
-
 	allShipsSunk() {
-		return this.#ships.every(ship => ship.isSunk() === true);
+		return this.#ships.every(ship => ship.isSunk());
 	}
 }
 

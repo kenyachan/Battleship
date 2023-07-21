@@ -59,7 +59,4 @@ class Position {
 	}
 }
 
-module.exports = {
-	Coordinates,
-	Position
-}
+module.exports = Coordinates;
