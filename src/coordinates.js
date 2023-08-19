@@ -37,26 +37,4 @@ class Coordinates {
 
 }
 
-class Position {
-	#coordinates = [];
-
-	constructor(initialCoordinates, length, direction) {
-		for (let i = 0; i < length; i++) {
-			let coordinates;
-
-			if (direction === 'horizontal')
-				coordinates = new Coordinates(initialCoordinates.x + i, initialCoordinates.y);
-
-			if (direction === 'vertical')
-				coordinates = new Coordinates(initialCoordinates.x, initialCoordinates.y + i);
-
-			this.#coordinates.push(coordinates);
-		}
-	}
-
-	getCoordinates() {
-		return this.#coordinates;
-	}
-}
-
 module.exports = Coordinates;
