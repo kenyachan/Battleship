@@ -1,45 +1,61 @@
 class Gameboard {
-	boardMaxWidth = 9;
-	boardMaxHeight = 9;
+	maxWidth = 9;
+	maxHeight = 9;
 
 	#squares = [];
 	#ships = [];
-	
-	constructor(Coordinates) {
-		for (let y = 0; y <= this.boardMaxWidth; y++) {
-			for (let x = 0; x <= this.boardMaxHeight; x++) {
+
+	constructor(width, height, Coordinates) {
+		for (let y = 0; y < height; y++) {
+			for (let x = 0; x < width; x++) {
 				let square = {
 					coordinates : new Coordinates(x, y),
 					ship : undefined,
 					shotReceived : false
-				}
+				};
 
 				this.#squares.push(square);
 			}
 		}
-	}
 
+		this.maxWidth = width - 1;
+		this.maxHeight = height - 1;
+	}
+/*	
+	constructor(board) {
+		this.#squares = board;
+		this.maxWidth = Math.max(...board.map(square => square.coordinates.x));
+		this.maxHeight = Math.max(...board.map(square => square.coordinates.y));
+	}
+*/
 	placeShip(ship, position) {
 		if (position.some(coordinates => this.#outOfBounds(coordinates)))
 			return false;
 
 		if (position.some(coordinates => this.#overlap(coordinates,
-			this.#squares))) return false;
+			this.#squares))) 
+			return false;
 
-		position.forEach(coordinate => this.#squares.find(square =>
-			square.coordinates.equals(coordinate)).ship = ship);
+		position.forEach(coordinate => 
+			this.#squares.find(square =>
+				square.coordinates.equals(coordinate)
+			).ship = ship
+		);
 
 		this.#ships.push(ship);
 
-		return true; }
+		return true; 
+	}
 
-	#overlap(coordinates, boardSquares) { return boardSquares.find(square =>
-		square.coordinates.equals(coordinates) && square.ship) }
+	#overlap(coordinates, boardSquares) { 
+		return boardSquares.find(square =>
+		square.coordinates.equals(coordinates) && square.ship) 
+	}
 
 	#outOfBounds(coordinates) {
 		return (
-			coordinates.x < 0 || coordinates.x > this.boardMaxWidth ||
-			coordinates.y < 0 || coordinates.y > this.boardMaxHeight
+			coordinates.x < 0 || coordinates.x > this.maxWidth ||
+			coordinates.y < 0 || coordinates.y > this.maxHeight
 		) 
 			? true : false;
 	}

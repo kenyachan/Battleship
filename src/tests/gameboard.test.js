@@ -14,13 +14,19 @@ jest.mock('../coordinates', () => {
 
 jest.mock('../ship');
 
-describe('Gamboard Test', () => {
+describe('Gamboard Unit Tests', () => {
 	let board;
 	let ship;
 
 	beforeEach(() => {
-		board = new Gameboard(Coordinates);
+		board = new Gameboard(10, 10, Coordinates);
 		ship = new Ship();
+	});
+
+	describe('Board creation', () => {
+		test('Gameboard of size 10x10 will have 100 squares', () => {
+			expect(board.getSquares()).toHaveLength(100);
+		});
 	});
 	
 	describe('Ship placement', () => {
@@ -122,19 +128,33 @@ describe('Gamboard Test', () => {
 	});
 	
 	describe('Gameboard allShipsSunk', () => {
-		test('Gameboard will report when all ships have been sunk', () => {
+		test('Gameboard will report true if all ships have been sunk', () => {
 			Ship.mockImplementationOnce(() => {
 				return {
 					'isSunk' : jest.fn(() => true)
 				};
-			});		
+			});
 
 			board.placeShip(new Ship(), [
 				new Coordinates(0, 0), new Coordinates(1, 0), new Coordinates(2, 0)
 			]);	
 
-			expect(board.allShipsSunk())
-				.toEqual(true);
+			expect(board.allShipsSunk()).toEqual(true);
+		});
+
+		test('Gameboard will report false if not all ships have been sunk', () => {
+			Ship.mockImplementationOnce(() => {
+				return {
+					isSunk: jest.fn(() => false)
+				};
+			});
+
+			board.placeShip(new Ship(), [
+				new Coordinates(0, 0), new Coordinates(1, 0), new Coordinates(2, 0)
+			]);
+
+			expect(board.allShipsSunk()).toEqual(false);
 		});
 	});
 });
+
