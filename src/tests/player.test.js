@@ -1,6 +1,6 @@
 const Player = require('../player');
 const Coordinates = require('../coordinates');
-const Gamebaord = require('../gameboard');
+const Gameboard = require('../gameboard');
 
 jest.mock('../coordinates', () => {
 	return jest.fn().mockImplementation((x, y) => {
@@ -12,16 +12,37 @@ jest.mock('../coordinates', () => {
 	})
 });
 
-describe('Player Tests', () => {
-	const playerName = 'Jason Bourne';
+jest.mock('../gameboard');
+
+describe('Test Constructor', () => {	
+	/*
+	test('Player will be created with the name "Jason Bourne"', () => {
+		let player = new Player('JSON Bourne');
+
+		expect(player.name).toEqual('JSON Bourne');
+	});
+	*/
+
+	test('Player will be created with a blank gameboard', () => {
+		let friendlyWaters = new Gameboard();
+		//let player = new Player('JSON Bourne', friendlyWaters);
+		let player = new Player(friendlyWaters);
+
+		expect(player.getBoard()).toBe(friendlyWaters);
+	});
+});
+
+describe('Test player attacking oppenent gameboard', () => {
+	//const playerName = 'JSON Bourne';
 	let player;
 	let opponentBoard;
 	let attackCoordinates;
 
 	beforeEach(() => {
-		player = new Player(playerName);
-
-		oppenentBoard = {
+		//player = new Player(playerName);
+		player = new Player();
+		
+		opponentBoard = {
 			receiveAttack: jest.fn(coordinates => {
 				return true;
 			})
@@ -30,51 +51,23 @@ describe('Player Tests', () => {
 		attackCoordinates = new Coordinates(1, 1);
 	});
 
-	test('Player will be created with a name', () => {
-		expect(player.name).toEqual(playerName);
-	});
-
 	test('Player can shoot at opponents gameboard', () => {
-		expect(player.shoot(attackCoordinates, oppenentBoard)).toBeTruthy();
-		expect(oppenentBoard.receiveAttack.mock.calls).toHaveLength(1);
-		expect(player.getShotsFired()).toHaveLength(1);
-		expect(player.getShotsFired()).toEqual([attackCoordinates]);
+		expect(player.shoot(attackCoordinates, opponentBoard)).toBeTruthy();
+		expect(opponentBoard.receiveAttack.mock.calls).toHaveLength(1);
+		expect(player.getShotHistory()).toHaveLength(1);
+		expect(player.getShotHistory()).toEqual([attackCoordinates]);
 	});
 
 	test('Player cannot shoot the same coordinates twice', () => {
-		expect(player.getShotsFired()).toHaveLength(0);
+		expect(player.getShotHistory()).toHaveLength(0);
 
-		expect(player.shoot(attackCoordinates, oppenentBoard)).toBeTruthy();
-		expect(player.getShotsFired()).toHaveLength(1);
-		expect(player.getShotsFired()).toEqual([attackCoordinates]);
+		expect(player.shoot(attackCoordinates, opponentBoard)).toBeTruthy();
+		expect(player.getShotHistory()).toHaveLength(1);
+		expect(player.getShotHistory()).toEqual([attackCoordinates]);
 
-		expect(player.shoot(attackCoordinates, oppenentBoard)).toBeFalsy();
-		expect(player.getShotsFired()).toHaveLength(1);
-		expect(player.getShotsFired()).toEqual([attackCoordinates]);
+		expect(player.shoot(attackCoordinates, opponentBoard)).toBeFalsy();
+		expect(player.getShotHistory()).toHaveLength(1);
+		expect(player.getShotHistory()).toEqual([attackCoordinates]);
 	});
 });
-
-describe('Computer Test', () => {
-	const playerName = 'Computer';
-	let player;
-	let oppenentboard;
-	
-	beforeEach(() => {
-		player = new Player(playerName);
-
-		oppenentBoard = {
-			receiveAttack: jest.fn(coordinates => {
-				return true;
-			})
-		};
-	});
-
-	test('Computer will take a random shot at the oppenents board', () => {
-		expect(player.computerShoot(new Coordinates(0,0), oppenentBoard)).toBeTruthy();
-		expect(oppenentBoard.receiveAttack.mock.calls).toHaveLength(1);
-		expect(player.getShotsFired()).toHaveLength(1);
-	});
-
-});
-
 

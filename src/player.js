@@ -1,45 +1,28 @@
 class Player {
-	#name;
-	#shotsFired = [];
+	#board;
+	#shotHistory = [];
 
-	constructor(name) {
-		this.#name = name;
+	constructor(board) {
+		//this.name = name;
+		this.#board = board;
 	}
 
-	get name() {
-		return this.#name;
+	getBoard() {
+		return this.#board;
 	}
 
 	shoot(attackCoordinates, opponentBoard) {
-		if (this.#shotsFired.find(coordinates => coordinates.equals(attackCoordinates)))
+		if (this.#shotHistory.find(coordinates => coordinates.equals(attackCoordinates)))
 			return false;
 
-		this.#shotsFired.push(attackCoordinates);
-		oppenentBoard.receiveAttack(attackCoordinates);
+		this.#shotHistory.push(attackCoordinates);
+		opponentBoard.receiveAttack(attackCoordinates);
 
 		return true;
 	}
 
-	getShotsFired() {
-		return this.#shotsFired;
-	}
-
-	computerShoot(attackCoordinates, oppenentBoard) {
-		do {
-			attackCoordinates = this.#generateRandomCoordinates(attackCoordinates);
-		} while (this.#shotsFired.find(coordinates => coordinates.equals(attackCoordinates)));
-
-		return this.shoot(attackCoordinates, oppenentBoard);
-	}
-	
-	#generateRandomCoordinates(attackCoordinates) {
-		let randomX = Math.floor(Math.random() * 10);
-		let randomY = Math.floor(Math.random() * 10);
-
-		attackCoordinates.x = randomX;
-		attackCoordinates.y = randomY;
-
-		return attackCoordinates;
+	getShotHistory() {
+		return this.#shotHistory;
 	}
 }
 
