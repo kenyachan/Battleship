@@ -37,25 +37,63 @@ describe('Check ship lengths', () => {
 	});
 });
 
-describe('Test ship hit command', () => {
+describe('The ship will keep track of the number of times it has been hit', () => {
 	let ship;
 
 	beforeEach(() => {
-		ship = new Ship('carrier');
+		ship = new Ship('destroyer');
 	});
 
-	test('The ship will keep track of the number of times it has been hit', () => {
+	test('A destroyer with no hits will have a hit count of 0', () => {
+		expect(ship.getHits()).toEqual(0);
+	});
+
+	test('A destroyer hit once will have a hit count of 1', () => {
 		ship.hit();
+		
 		expect(ship.getHits()).toEqual(1);
+	});
+
+	test('A destroyer hit twice will have a hit count of 2', () => {
 		ship.hit();
+		ship.hit();
+
 		expect(ship.getHits()).toEqual(2);
 	});
 
-	test('A ship hit the same number of times as its length will report true for isSunk()', () => {
-		for (let i = 0; i < ship.length; i++)
-			ship.hit();
+	test('A destroyer hit three times will have a hit count of 2', () => {
+		ship.hit();
+		ship.hit();
+		ship.hit();
 
-		expect(ship.getHits()).toEqual(ship.length);
+		expect(ship.getHits()).toEqual(2);
+	});
+});
+
+describe('A ship hit the same number of times as its length will report true for isSunk()', () => {
+	let ship;
+
+	beforeEach(() => {
+		ship = new Ship('destroyer');
+	});
+
+	test('A destroyer with no hits will report false for isSunk()', ()=> {
+		expect(ship.getHits()).toEqual(0);
+		expect(ship.isSunk()).toEqual(false);
+	});
+
+	test('A destroyer hit once will report false for isSunk()', () => {
+		ship.hit();
+
+		expect(ship.getHits()).toEqual(1);
+		expect(ship.isSunk()).toEqual(false);
+	});
+
+	test('A destroyer hit twice will report true for isSunk()', () => {
+		ship.hit();
+		ship.hit();
+
+		expect(ship.getHits()).toEqual(2);
 		expect(ship.isSunk()).toEqual(true);
 	});
 });
