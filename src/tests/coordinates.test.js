@@ -1,6 +1,6 @@
 const Coordinates = require('../coordinates');
 
-describe('Coordinates Test', () => {
+describe('Test Coordinates Class', () => {
 	let coordinates;
 	let randomX;
 	let randomY;
@@ -12,7 +12,7 @@ describe('Coordinates Test', () => {
 		coordinates = new Coordinates(randomX, randomY);
 	});
 
-	describe('Test coordinates are created properly', () => {
+	describe('Test creation of coordinates', () => {
 		test('x coordinate is equal to randomX', () => {
 			expect(coordinates.x)
 				.toEqual(randomX);
