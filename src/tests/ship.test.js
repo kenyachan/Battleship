@@ -1,4 +1,4 @@
-const Ship = require('../ship');
+const Ship = require('../classes/ship');
 
 describe('Check ship lengths', () => {	
 	test('Destroyer has length of 2', () => {

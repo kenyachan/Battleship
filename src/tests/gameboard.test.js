@@ -1,80 +1,53 @@
-const Gameboard = require('../gameboard');
-const Coordinates = require('../coordinates');
-const Ship = require('../ship');
+const Gameboard = require('../classes/gameboard');
+const Ship = require('../classes/ship');
 
-jest.mock('../coordinates', () => {
-	return jest.fn().mockImplementation((x, y) => {
-		return {
-			'x': x,
-			'y': y,
-			'equals': jest.fn(coordinates => coordinates.x === x && coordinates.y === y)
-		};
-	})
-});
-
-jest.mock('../ship');
+jest.mock('../classes/ship');
 
 describe('Gamboard Unit Tests', () => {
 	let board;
 	let ship;
 
 	beforeEach(() => {
-		board = new Gameboard(Coordinates);
+		board = new Gameboard();
 		ship = new Ship();
 	});
 
 	describe('Board creation', () => {
 		test('Gameboard of size 10x10 will have 100 squares', () => {
-			expect(board.getSquares()).toHaveLength(100);
+			expect(board.squares).toHaveLength(100);
 		});
 	});
 	
 	describe('Ship placement', () => {
 		test('A ship can be placed on the board', () => {
-			let position = [
-				new Coordinates(0, 0), new Coordinates(1, 0), new Coordinates(2, 0)
-			]
+			let position = [0, 1 ,2];
 
 			expect(board.placeShip(ship, position)).toBeTruthy();
-			expect(board.getShips())
-				.toHaveLength(1);
-			expect(board.getSquares()
-				.find(square => 
-					square.coordinates.equals(new Coordinates(0, 0))
-				).ship
-			)
-				.toBeTruthy();
+			expect(board.getShips()).toHaveLength(1);
+			expect(board.squares.filter(square => square.ship)).toHaveLength(3);
 		});
 
 		test('A ship cannot be placed beyond the boards limits', () => {
-			let position = [
-				new Coordinates(1337, 9000), new Coordinates(1337, 9001)
-			]
+			let position = [1337, 9000];
 			
 			expect(board.placeShip(ship, position)).toBeFalsy();
 			expect(board.getShips()).toHaveLength(0);
 		});
 
 		test('A ship cannot be placed and extend beyond the boards limits', () => {
-			let position = [
-				new Coordinates(9, 9), new Coordinates(10, 9)
-			]
+			let position = [99, 100]
 
 			expect(board.placeShip(ship, position)).toBeFalsy();
 			expect(board.getShips()).toHaveLength(0);
 		});
 
 		test('A ship cannot overlap placement with another ship', () => {
-			let firstPosition = [
-				new Coordinates(4, 5), new Coordinates(5, 5), new Coordinates(6, 5)
-			]
+			let firstPosition = [44, 45, 46];
 
 			expect(board.placeShip(ship, firstPosition)).toBeTruthy();
 			expect(board.getShips()).toHaveLength(1);
 
-			let secondPosition = [
-				new Coordinates(5, 4), new Coordinates(5, 5), new Coordinates(5, 6)
-			]
+			let secondPosition = [35, 45, 55];
 
 			expect(board.placeShip(ship, secondPosition)).toBeFalsy();
 			expect(board.getShips()).toHaveLength(1);
@@ -83,47 +56,38 @@ describe('Gamboard Unit Tests', () => {
 
 	describe('Gameboard attack', () => {
 		beforeEach(() => {
-			board.placeShip(ship, [
-				new Coordinates(0, 0), new Coordinates(1, 0), new Coordinates(2, 0)
-			]);
+			board.placeShip(ship, [0, 1, 2]);
 		});
 
 		test('Gameboard cannot receive attack where previous attack has occured', () => {
-			let attackCoordinates = new Coordinates(1, 1);
+			let targetSquare = 11;
 
-			board.receiveAttack(attackCoordinates);
-			expect(board.getSquares().filter(square => square.shotReceived)).toHaveLength(1);
+			board.receiveAttack(targetSquare);
+			expect(board.squares.filter(square => square.shotReceived)).toHaveLength(1);
 			
-			board.receiveAttack(attackCoordinates);
-			expect(board.getSquares().filter(square => square.shotReceived)).toHaveLength(1);
+			board.receiveAttack(targetSquare);
+			expect(board.squares.filter(square => square.shotReceived)).toHaveLength(1);
 		});
 
 		test('Gameboard cannot receive attack out of board limits', () => {
-			let attackCoordinates = new Coordinates(1337, 9001);
+			let targetSquare = 1337;
 			
-			expect(board.receiveAttack(attackCoordinates))
+			expect(board.receiveAttack(targetSquare))
 				.toBeFalsy();
 		});
 
 		test('Gameboard will record a hit against the ship', () => {
-			let attackCoordinates = new Coordinates(1, 0);
+			let targetSquare = 1;
 
-			expect(board.receiveAttack(attackCoordinates))
-				.toBeTruthy();
-
-			expect(board.getSquares()
-				.find(square => square.coordinates.equals(attackCoordinates))
-				.shotReceived
-			)
-				.toBeTruthy();
+			expect(board.receiveAttack(targetSquare)).toBeTruthy();
+			expect(board.squares[targetSquare].shotReceived).toBeTruthy();
 		});
 
 		test('Gameboard will keep track of all missed attacks', () => {
-			for (let y = 0; y < 5; y++)
-				board.receiveAttack(new Coordinates(1, y));
+			for (let i = 0; i < 5; i++)
+				board.receiveAttack(i + 2);
 
-			expect(board.getSquares().filter(square => square.shotReceived && !square.ship))
-				.toHaveLength(4);
+			expect(board.squares.filter(square => square.shotReceived && !square.ship)).toHaveLength(4);
 		});
 	});
 	
@@ -135,9 +99,7 @@ describe('Gamboard Unit Tests', () => {
 				};
 			});
 
-			board.placeShip(new Ship(), [
-				new Coordinates(0, 0), new Coordinates(1, 0), new Coordinates(2, 0)
-			]);	
+			board.placeShip(new Ship(), [0, 1, 2]);	
 
 			expect(board.allShipsSunk()).toEqual(true);
 		});
@@ -149,9 +111,7 @@ describe('Gamboard Unit Tests', () => {
 				};
 			});
 
-			board.placeShip(new Ship(), [
-				new Coordinates(0, 0), new Coordinates(1, 0), new Coordinates(2, 0)
-			]);
+			board.placeShip(new Ship(), [0, 1, 2]);
 
 			expect(board.allShipsSunk()).toEqual(false);
 		});
