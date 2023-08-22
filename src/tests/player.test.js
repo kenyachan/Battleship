@@ -1,31 +1,11 @@
-const Player = require('../player');
-const Coordinates = require('../coordinates');
-const Gameboard = require('../gameboard');
+const Player = require('../classes/player');
+const Gameboard = require('../classes/gameboard');
 
-jest.mock('../coordinates', () => {
-	return jest.fn().mockImplementation((x, y) => {
-		return {
-			'x': x,
-			'y': y,
-			'equals': jest.fn(coordinates => coordinates.x === x && coordinates.y === y)
-		};
-	})
-});
-
-jest.mock('../gameboard');
+jest.mock('../classes/gameboard');
 
 describe('Test Constructor', () => {	
-	/*
-	test('Player will be created with the name "Jason Bourne"', () => {
-		let player = new Player('JSON Bourne');
-
-		expect(player.name).toEqual('JSON Bourne');
-	});
-	*/
-
 	test('Player will be created with a blank gameboard', () => {
 		let friendlyWaters = new Gameboard();
-		//let player = new Player('JSON Bourne', friendlyWaters);
 		let player = new Player(friendlyWaters);
 
 		expect(player.getBoard()).toBe(friendlyWaters);
@@ -33,13 +13,11 @@ describe('Test Constructor', () => {
 });
 
 describe('Test player attacking oppenent gameboard', () => {
-	//const playerName = 'JSON Bourne';
 	let player;
 	let opponentBoard;
-	let attackCoordinates;
+	let targetSquare;
 
 	beforeEach(() => {
-		//player = new Player(playerName);
 		player = new Player();
 		
 		opponentBoard = {
@@ -48,26 +26,26 @@ describe('Test player attacking oppenent gameboard', () => {
 			})
 		};
 
-		attackCoordinates = new Coordinates(1, 1);
+		targetSquare = 11;
 	});
 
 	test('Player can shoot at opponents gameboard', () => {
-		expect(player.shoot(attackCoordinates, opponentBoard)).toBeTruthy();
+		expect(player.shoot(targetSquare, opponentBoard)).toBeTruthy();
 		expect(opponentBoard.receiveAttack.mock.calls).toHaveLength(1);
 		expect(player.getShotHistory()).toHaveLength(1);
-		expect(player.getShotHistory()).toEqual([attackCoordinates]);
+		expect(player.getShotHistory()).toEqual([targetSquare]);
 	});
 
 	test('Player cannot shoot the same coordinates twice', () => {
 		expect(player.getShotHistory()).toHaveLength(0);
 
-		expect(player.shoot(attackCoordinates, opponentBoard)).toBeTruthy();
+		expect(player.shoot(targetSquare, opponentBoard)).toBeTruthy();
 		expect(player.getShotHistory()).toHaveLength(1);
-		expect(player.getShotHistory()).toEqual([attackCoordinates]);
+		expect(player.getShotHistory()).toEqual([targetSquare]);
 
-		expect(player.shoot(attackCoordinates, opponentBoard)).toBeFalsy();
+		expect(player.shoot(targetSquare, opponentBoard)).toBeFalsy();
 		expect(player.getShotHistory()).toHaveLength(1);
-		expect(player.getShotHistory()).toEqual([attackCoordinates]);
+		expect(player.getShotHistory()).toEqual([targetSquare]);
 	});
 });
 

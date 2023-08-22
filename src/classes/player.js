@@ -3,7 +3,6 @@ class Player {
 	#shotHistory = [];
 
 	constructor(board) {
-		//this.name = name;
 		this.#board = board;
 	}
 
@@ -11,12 +10,12 @@ class Player {
 		return this.#board;
 	}
 
-	shoot(attackCoordinates, opponentBoard) {
-		if (this.#shotHistory.find(coordinates => coordinates.equals(attackCoordinates)))
+	shoot(targetSquare, opponentBoard) {
+		if (this.#shotHistory.find(square => square === targetSquare))
 			return false;
 
-		this.#shotHistory.push(attackCoordinates);
-		opponentBoard.receiveAttack(attackCoordinates);
+		this.#shotHistory.push(targetSquare);
+		opponentBoard.receiveAttack(targetSquare);
 
 		return true;
 	}
