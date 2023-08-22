@@ -5,9 +5,9 @@ class Gameboard {
 	#squares = [];
 	#ships = [];
 
-	constructor(width, height, Coordinates) {
-		for (let y = 0; y < height; y++) {
-			for (let x = 0; x < width; x++) {
+	constructor(Coordinates) {
+		for (let y = 0; y < 10; y++) {
+			for (let x = 0; x < 10 ; x++) {
 				let square = {
 					coordinates : new Coordinates(x, y),
 					ship : undefined,
@@ -17,17 +17,8 @@ class Gameboard {
 				this.#squares.push(square);
 			}
 		}
+	}
 
-		this.maxWidth = width - 1;
-		this.maxHeight = height - 1;
-	}
-/*	
-	constructor(board) {
-		this.#squares = board;
-		this.maxWidth = Math.max(...board.map(square => square.coordinates.x));
-		this.maxHeight = Math.max(...board.map(square => square.coordinates.y));
-	}
-*/
 	placeShip(ship, position) {
 		if (position.some(coordinates => this.#outOfBounds(coordinates)))
 			return false;

@@ -19,7 +19,7 @@ describe('Gamboard Unit Tests', () => {
 	let ship;
 
 	beforeEach(() => {
-		board = new Gameboard(10, 10, Coordinates);
+		board = new Gameboard(Coordinates);
 		ship = new Ship();
 	});
 
