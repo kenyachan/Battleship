@@ -1,0 +1,92 @@
+* {
+	font-family: 'Courier New', Courier, monospace;
+	color: whitesmoke;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background-color: navy;
+	height: 100svh;
+
+	display: flex;
+	flex-direction: column;
+
+	/* stuff to remove? */
+	align-items: center;
+	/* gap: 1rem; */
+}
+
+header, footer {
+	margin: 2rem 0;
+}
+
+main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2rem;
+
+	justify-content: center;
+
+	/* Vertical centre alignment */
+	flex: 1 1 auto;
+	/* margin: auto; */
+}
+
+#game-title {
+	font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+	font-size: 6rem;
+	color: lightgray;
+
+	text-transform: uppercase;
+
+	background: url(../img/battleship.jpeg) 0 -5rem /cover no-repeat;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+
+	-webkit-text-stroke: 2px slategray;
+
+	user-select: none;
+} 
+
+#gameboard-container {
+	display: flex;
+	flex-direction: row;
+	gap: 2rem;
+}
+
+.playerBoard-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+}
+
+.gameboard {
+	display: flex;
+	/*grid-template-columns: repeat(10,1fr);*/
+	width: 50svh;
+	height: 50svh;
+	flex-wrap: wrap-reverse;
+}
+
+.square {
+	/*aspect-ratio: 1/1;*/
+	outline: 1px solid white;
+	width: 10%;
+	height: 10%;
+
+	font-size: .8rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.friendly > .square:hover {
+	background-color: aqua;
+}
+
+.enemy > .square:hover {
+	outline: 1px solid red;
+}
