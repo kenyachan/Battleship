@@ -1,10 +1,19 @@
 class Ship {
-	length;
+	#type;
+	#length;
 	#hits = 0;
 
 	constructor(type) {
-		this.type = type;
-		this.length = SHIPTYPES.find(ship => ship.type === this.type).length;
+		this.#type = type;
+		this.#length = SHIPTYPES.find(ship => ship.type === this.type).length;
+	}
+
+	get type() {
+		return this.#type;
+	}
+
+	get length() {
+		return this.#length;
 	}
 
 	hit() {
@@ -12,12 +21,12 @@ class Ship {
 			this.#hits += 1;
 	}
 
-	getHits() {
+	get hits() {
 		return this.#hits;
 	}
 
 	isSunk() {
-		return this.#hits < this.length ? false : true;
+		return this.#hits < this.#length ? false : true;
 	}
 }
 

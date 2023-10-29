@@ -1,51 +1,73 @@
-const Player = require('../classes/player');
-const Gameboard = require('../classes/gameboard');
+const Player = require('../player');
+const Gameboard = require('../gameboard');
 
-jest.mock('../classes/gameboard');
+jest.mock('../gameboard');
 
-describe('Test Constructor', () => {	
+describe('Test constructor', () => {	
 	test('Player will be created with a blank gameboard', () => {
 		let friendlyWaters = new Gameboard();
 		let player = new Player(friendlyWaters);
 
-		expect(player.getBoard()).toBe(friendlyWaters);
+		expect(player.board instanceof Gameboard).toEqual(true);
+		expect(player.board).toBe(friendlyWaters);
 	});
 });
 
-describe('Test player attacking oppenent gameboard', () => {
+describe('Test shoot', () => {
 	let player;
 	let opponentBoard;
-	let targetSquare;
+	let targetCoordinates;
 
 	beforeEach(() => {
 		player = new Player();
 		
 		opponentBoard = {
 			receiveAttack: jest.fn(coordinates => {
-				return true;
+				return {
+					shotReceived: true
+				};
 			})
 		};
 
-		targetSquare = 11;
+		targetCoordinates = 11;
 	});
 
-	test('Player can shoot at opponents gameboard', () => {
-		expect(player.shoot(targetSquare, opponentBoard)).toBeTruthy();
-		expect(opponentBoard.receiveAttack.mock.calls).toHaveLength(1);
-		expect(player.getShotHistory()).toHaveLength(1);
-		expect(player.getShotHistory()).toEqual([targetSquare]);
+	test('Shooting the opponents board will return the square being shot', () => {
+		let targetSquare = player.shoot(opponentBoard, targetCoordinates);
+
+		expect(typeof targetSquare).toBe('object');
 	});
 
-	test('Player cannot shoot the same coordinates twice', () => {
-		expect(player.getShotHistory()).toHaveLength(0);
+	test('Shooting the same coordinates twice will throw an error', ()=> {
+		let firstShot = player.shoot(opponentBoard, targetCoordinates);
+		
+		expect(() => player.shoot(opponentBoard, targetCoordinates)).toThrow();
+	});
+});
 
-		expect(player.shoot(targetSquare, opponentBoard)).toBeTruthy();
-		expect(player.getShotHistory()).toHaveLength(1);
-		expect(player.getShotHistory()).toEqual([targetSquare]);
+describe('Test shotHistory', () => {
+	let player;
+	let opponentBoard;
+	let targetCoordinates;
 
-		expect(player.shoot(targetSquare, opponentBoard)).toBeFalsy();
-		expect(player.getShotHistory()).toHaveLength(1);
-		expect(player.getShotHistory()).toEqual([targetSquare]);
+	beforeEach(() => {
+		player = new Player();
+		
+		opponentBoard = {
+			receiveAttack: jest.fn(coordinates => {
+				return {
+					shotReceived: true
+				};
+			})
+		};
+
+		targetCoordinates = 11;
+	});
+
+	test('Shot coordinates will be recorded in the shotHistory', () => {
+		player.shoot(opponentBoard, targetCoordinates);
+
+		expect(player.shotHistory.includes(targetCoordinates)).toBe(true);
 	});
 });
 

@@ -64,23 +64,14 @@ main {
 }
 
 .gameboard {
-	display: flex;
-	/*grid-template-columns: repeat(10,1fr);*/
+	display: grid;
+	grid-template-columns: repeat(10,1fr);
 	width: 50svh;
-	height: 50svh;
-	flex-wrap: wrap-reverse;
 }
 
 .square {
-	/*aspect-ratio: 1/1;*/
+	aspect-ratio: 1/1;
 	outline: 1px solid white;
-	width: 10%;
-	height: 10%;
-
-	font-size: .8rem;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 }
 
 .friendly > .square:hover {
@@ -89,4 +80,12 @@ main {
 
 .enemy > .square:hover {
 	outline: 1px solid red;
+}
+
+.friendly > .ship {
+	background-color: slategrey;
+}
+
+.square.shotReceived {
+	background-color: red;
 }
