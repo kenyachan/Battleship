@@ -6,13 +6,13 @@ class Player {
 		this.board = board;
 	}
 
-	shoot(opponentBoard, targetSquare) {
-		if (this.shotHistory.find(square => square === targetSquare))
-			throw new error(`A shot has already been taken at ${targetSquare}`);
+	shoot(opponentBoard, targetCoordinates) {
+		if (this.shotHistory.find(square => square === targetCoordinates))
+			throw new error(`A shot has already been taken at ${targetCoordinates}`);
 
-		this.shotHistory.push(targetSquare);
+		this.shotHistory.push(targetCoordinates);
 
-		let shot = opponentBoard.receiveAttack(targetSquare);
+		let shot = opponentBoard.receiveAttack(targetCoordinates);
 
 		return shot;
 	}
