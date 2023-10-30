@@ -32,6 +32,12 @@ describe('Test shoot', () => {
 		targetCoordinates = 11;
 	});
 
+	test('Shoot will call shotReceived on the opponents board with the given coordinates', () => {
+		player.shoot(opponentBoard, targetCoordinates);
+
+		expect(opponentBoard.receiveAttack).toHaveBeenCalledWith(targetCoordinates);
+	});
+
 	test('Shooting the opponents board will return the square being shot', () => {
 		let targetSquare = player.shoot(opponentBoard, targetCoordinates);
 
