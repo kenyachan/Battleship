@@ -1,4 +1,5 @@
-const Ship = require('../ship');
+const dryDock = require('../ship');
+const Ship = dryDock.Ship;
 
 describe('Check ship lengths', () => {	
 	test('Creating a ship with type of "destroyer" has length of 2', () => {

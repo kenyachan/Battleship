@@ -74,7 +74,13 @@ main {
 	outline: 1px solid white;
 }
 
+/*
 .friendly > .square:hover {
+	background-color: aqua;
+}
+*/
+
+.placeShip.square {
 	background-color: aqua;
 }
 

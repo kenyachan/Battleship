@@ -1,5 +1,6 @@
 const Gameboard = require('../gameboard');
-const Ship = require('../ship');
+const DryDock = require('../ship');
+const Ship = DryDock.Ship;
 
 jest.mock('../ship');
 

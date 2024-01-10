@@ -5,7 +5,7 @@ class Ship {
 
 	constructor(type) {
 		this.#type = type;
-		this.#length = SHIPTYPES.find(ship => ship.type === this.type).length;
+		this.#length = ShipTypes.find(ship => ship.type === this.type).length;
 	}
 
 	get type() {
@@ -30,7 +30,7 @@ class Ship {
 	}
 }
 
-const SHIPTYPES = [
+const ShipTypes = [
 	{
 		'type' : 'destroyer',
 		'length' : 2
@@ -53,4 +53,7 @@ const SHIPTYPES = [
 	},
 ];
 	
-module.exports = Ship;
+module.exports = {
+	Ship,
+	ShipTypes
+}
